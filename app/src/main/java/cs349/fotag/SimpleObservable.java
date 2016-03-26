@@ -1,6 +1,9 @@
 package cs349.fotag;
 
-public class Observable extends java.util.Observable {
+import java.util.Observable;
+
+public class SimpleObservable extends Observable {
+
     @Override
     public void notifyObservers() {
         setChanged();

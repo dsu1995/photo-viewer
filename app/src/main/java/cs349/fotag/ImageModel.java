@@ -16,7 +16,7 @@ import java.net.URL;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
-public class ImageModel extends Observable {
+public class ImageModel extends SimpleObservable {
     private Drawable image;
     private int rating;
 
@@ -45,7 +45,7 @@ public class ImageModel extends Observable {
         rating = max(min(rating, 5), 0);
         if (this.rating != rating) {
             this.rating = rating;
-            notifyObservers();
+            notifyObservers(Signals.RATING_CHANGED);
         }
     }
 
@@ -65,18 +65,18 @@ public class ImageModel extends Observable {
             URL url = urls[0];
             try (InputStream stream = url.openStream()){
                 Bitmap bmp = BitmapFactory.decodeStream(stream);
-                return new BitmapDrawable(resources, bmp);
+                Drawable drawable = new BitmapDrawable(resources, bmp);
+                return drawable;
             }
             catch (IOException e) {
-                e.printStackTrace();
-                return null;
+                throw new RuntimeException(e);
             }
         }
 
         @Override
         protected void onPostExecute(Drawable drawable) {
             image = drawable;
-            notifyObservers();
+            notifyObservers(Signals.IMAGE_LOADED);
         }
     }
 }

@@ -8,7 +8,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,19 +33,27 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-
-        ImageView imageView = (ImageView) findViewById(R.id.imageView);
-
-        ImageModel imageModel = new ImageModel(this, R.drawable.sample1);
-
-        imageView.setImageDrawable(imageModel.getImage());
 
 
+        LinearLayout layout = new LinearLayout(this);
+
+//        ImageModel imageModel = new ImageModel(this, R.drawable.sample1);
+//
+//        AsyncImageView imageView = new AsyncImageView(this, imageModel);
+//
+//        layout.addView(imageView);
+
+
+        try {
+            ImageModel imageModel2 = new ImageModel(getResources(), new URL("http://www.serebii.net/vgc/vgcs.png"));
+            AsyncImageView imageView2 = new AsyncImageView(this, imageModel2);
+            layout.addView(imageView2);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        setContentView(layout);
     }
 
     @Override
@@ -48,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
