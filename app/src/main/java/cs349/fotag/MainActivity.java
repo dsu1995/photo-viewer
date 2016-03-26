@@ -1,20 +1,12 @@
 package cs349.fotag;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,17 +17,17 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
 
 
-        LinearLayout layout = new LinearLayout(this);
+//        LinearLayout layout = new LinearLayout(this);
 
 //        ImageModel imageModel = new ImageModel(this, R.drawable.sample1);
 //
@@ -44,16 +36,29 @@ public class MainActivity extends AppCompatActivity {
 //        layout.addView(imageView);
 
 
-        try {
-            ImageModel imageModel2 = new ImageModel(getResources(), new URL("http://www.serebii.net/vgc/vgcs.png"));
-            AsyncImageView imageView2 = new AsyncImageView(this, imageModel2);
-            layout.addView(imageView2);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            ImageModel imageModel2 = new ImageModel(getResources(), new URL("http://www.serebii.net/anime/pokemon/251.gif"));
+//            AsyncImageView imageView2 = new AsyncImageView(this, imageModel2);
+//            layout.addView(imageView2);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//
+//        setContentView(layout);
 
 
-        setContentView(layout);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.main_recycler_view);
+        recyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        ImageAdapter adapter = new ImageAdapter();
+        recyclerView.setAdapter(adapter);
+
+        adapter.addImage(new ImageModel(this, R.drawable.sample1));
+        adapter.addImage(new ImageModel(this, R.drawable.sample2));
+        adapter.addImage(new ImageModel(this, R.drawable.sample3));
+        adapter.addImage(new ImageModel(this, R.drawable.sample4));
     }
 
     @Override

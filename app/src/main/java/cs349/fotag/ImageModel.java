@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.support.v4.content.ContextCompat;
 
@@ -18,6 +19,7 @@ import static java.lang.Math.min;
 
 public class ImageModel extends SimpleObservable {
     private Drawable image;
+    private Drawable thumbnail;
     private int rating;
 
     public enum Signals {
@@ -27,7 +29,12 @@ public class ImageModel extends SimpleObservable {
 
     public ImageModel(Context context, int id) {
         rating = 0;
-        image = ContextCompat.getDrawable(context, id);
+        Resources resources = context.getResources();
+        Bitmap bmp = BitmapFactory.decodeResource(resources, id);
+        image = new BitmapDrawable(resources, bmp);
+
+        Bitmap thumbnailBmp = ThumbnailUtils.extractThumbnail(bmp, 1280, 720);
+        thumbnail = new BitmapDrawable(resources, thumbnailBmp);
         notifyObservers(Signals.IMAGE_LOADED);
     }
 
@@ -35,6 +42,10 @@ public class ImageModel extends SimpleObservable {
         rating = 0;
         image = null;
         new DownloadImageAsync(resources).execute(url);
+    }
+
+    public Drawable getThumbnail() {
+        return thumbnail;
     }
 
     public int getRating() {
@@ -65,6 +76,7 @@ public class ImageModel extends SimpleObservable {
             URL url = urls[0];
             try (InputStream stream = url.openStream()){
                 Bitmap bmp = BitmapFactory.decodeStream(stream);
+                bmp = Bitmap.createScaledBitmap(bmp, 1000, 1000, true);
                 Drawable drawable = new BitmapDrawable(resources, bmp);
                 return drawable;
             }
