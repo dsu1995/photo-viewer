@@ -22,7 +22,10 @@ public class ImageModel extends SimpleObservable {
     public ImageModel(Resources res, int id) {
         rating = 0;
 
-        Bitmap bmp = BitmapFactory.decodeResource(res, id);
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inScaled = false;
+
+        Bitmap bmp = BitmapFactory.decodeResource(res, id, options);
         image = new BitmapDrawable(res, bmp);
 
         Bitmap thumbnailBmp = ThumbnailUtils.extractThumbnail(bmp, 1280, 720);
@@ -43,10 +46,6 @@ public class ImageModel extends SimpleObservable {
 
     public Drawable getThumbnail() {
         return thumbnail;
-    }
-
-    public Bitmap getImageBmp() {
-        return image.getBitmap();
     }
 
     public int getRating() {
