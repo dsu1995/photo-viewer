@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String IMAGE_MESSAGE = "cs349.fotag.IMAGE_MESSAGE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,19 +47,20 @@ public class MainActivity extends AppCompatActivity {
 //
 //
 //        setContentView(layout);
-
+        ImageCollectionModel imageCollectionModel = new ImageCollectionModel(getResources());
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.main_recycler_view);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        ImageAdapter adapter = new ImageAdapter();
+        ImageAdapter adapter = new ImageAdapter(imageCollectionModel, this);
         recyclerView.setAdapter(adapter);
 
-        adapter.addImage(new ImageModel(this, R.drawable.sample1));
-        adapter.addImage(new ImageModel(this, R.drawable.sample2));
-        adapter.addImage(new ImageModel(this, R.drawable.sample3));
-        adapter.addImage(new ImageModel(this, R.drawable.sample4));
+        imageCollectionModel.addImageResource(R.drawable.sample1);
+        imageCollectionModel.addImageResource(R.drawable.sample2);
+        imageCollectionModel.addImageResource(R.drawable.sample3);
+        imageCollectionModel.addImageResource(R.drawable.sample4);
+        imageCollectionModel.addImageFromUrl("http://www.serebii.net/sunmoon2.jpg");
     }
 
     @Override

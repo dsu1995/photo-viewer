@@ -1,5 +1,7 @@
 package cs349.fotag;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,8 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -24,10 +24,20 @@ import java.util.Observer;
  */
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> implements Observer {
     private ImageCollectionModel images;
+    private Activity activity;
 
     @Override
     public void update(Observable observable, Object data) {
-
+        ChangeEvent event = (ChangeEvent) data;
+        if (event.event == ChangeEvent.Event.REFILTER_ALL) {
+            notifyDataSetChanged();
+        }
+        else if (event.event == ChangeEvent.Event.REMOVE) {
+            notifyItemRemoved(event.index);
+        }
+        else if (event.event == ChangeEvent.Event.ADD) {
+            notifyItemInserted(event.index);
+        }
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -41,8 +51,10 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
         }
     }
 
-    public ImageAdapter(ImageCollectionModel images) {
+    public ImageAdapter(ImageCollectionModel images, Activity activity) {
         this.images = images;
+        this.activity = activity;
+        images.addObserver(this);
     }
 
     @Override
@@ -54,12 +66,29 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        final ImageModel imageModel = images.getVisibleImage(position);
+        holder.imageView.setImageDrawable(imageModel.getThumbnail());
+        holder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(activity, FullscreenImageActivity.class);
+                ImageCollectionModel.MAILBOX = imageModel;
+//                intent.putExtra(MainActivity.IMAGE_MESSAGE, imageModel.getImageBmp());
+                activity.startActivity(intent);
+            }
+        });
 
-
+        holder.ratingBar.setRating(imageModel.getRating());
+        holder.ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                imageModel.setRating((int) rating);
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-
+        return images.getNumVisibleImages();
     }
 }
