@@ -3,7 +3,7 @@ package cs349.fotag;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 
-import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -24,15 +24,26 @@ public class ImageCollectionModel extends SimpleObservable implements Observer {
     private Set<Integer> addedLocalDrawables;
     private Set<String> addedUrls;
 
+    private List<LoadResourceAsync> pendingLoadResources;
+    private List<DownloadAsync> pendingDownloads;
+
     private List<ImageModel> images;
     private List<ImageModel> visibleImages;
     private int ratingFilter;
+    private ErrorHandler errorHandler;
 
-    public ImageCollectionModel(Resources res) {
+    public ImageCollectionModel(Resources res, ErrorHandler errorHandler) {
+        this.errorHandler = errorHandler;
+
         images = new ArrayList<>();
         visibleImages = new ArrayList<>();
+
         addedLocalDrawables = new HashSet<>();
         addedUrls = new HashSet<>();
+
+        pendingLoadResources = new ArrayList<>();
+        pendingDownloads = new ArrayList<>();
+
         this.res = res;
         ratingFilter = 0;
     }
@@ -71,7 +82,11 @@ public class ImageCollectionModel extends SimpleObservable implements Observer {
     public boolean addImageResource(int id) {
         if (!addedLocalDrawables.contains(id)) {
             addedLocalDrawables.add(id);
-            new LoadResourceAsync().execute(id);
+
+            LoadResourceAsync newTask = new LoadResourceAsync();
+            pendingLoadResources.add(newTask);
+            newTask.execute(id);
+
             return true;
         }
         else {
@@ -79,18 +94,21 @@ public class ImageCollectionModel extends SimpleObservable implements Observer {
         }
     }
 
-    public boolean addImageFromUrl(String urlStr) {
+    public boolean addImageFromUrl(String urlStr) throws MalformedURLException {
         if (!addedUrls.contains(urlStr)) {
             addedUrls.add(urlStr);
-            try {
-                new DownloadAsync().execute(new URL(urlStr));
-                return true;
-            }
-            catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
+
+            URL url = new URL(urlStr);
+
+            DownloadAsync newTask = new DownloadAsync();
+            pendingDownloads.add(newTask);
+            newTask.execute(url);
+
+            return true;
         }
-        return false;
+        else {
+            return false;
+        }
     }
 
     public ImageModel getVisibleImage(int index) {
@@ -124,24 +142,39 @@ public class ImageCollectionModel extends SimpleObservable implements Observer {
 
         @Override
         protected void onPostExecute(ImageModel imageModel) {
+            pendingLoadResources.remove(this);
             addImage(imageModel);
         }
     }
 
 
     private class DownloadAsync extends AsyncTask<URL, Void, ImageModel> {
+        private Exception e = null;
+
         @Override
         protected ImageModel doInBackground(URL... urls) {
             try {
                 return new ImageModel(res, urls[0]);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            }
+            catch (FileNotFoundException e) {
+                this.e = new RuntimeException("URL does not contain a valid image!", e);
+                return null;
+            }
+            catch (Exception e) {
+                this.e = e;
+                return null;
             }
         }
 
         @Override
         protected void onPostExecute(ImageModel imageModel) {
-            addImage(imageModel);
+            if (e != null) {
+                errorHandler.handle(e);
+            }
+            else {
+                pendingDownloads.remove(this);
+                addImage(imageModel);
+            }
         }
     }
 
@@ -149,4 +182,24 @@ public class ImageCollectionModel extends SimpleObservable implements Observer {
         return visibleImages.size();
     }
 
+    public void clearImages() {
+        for (LoadResourceAsync pendingTask: pendingLoadResources) {
+            pendingTask.cancel(true);
+        }
+        pendingLoadResources.clear();
+        for (DownloadAsync pendingTask: pendingDownloads) {
+            pendingTask.cancel(true);
+        }
+        pendingDownloads.clear();
+
+        addedLocalDrawables.clear();
+        addedUrls.clear();
+        images.clear();
+        visibleImages.clear();
+        notifyObservers(new ChangeEvent(ChangeEvent.Event.REFILTER_ALL));
+    }
+
+    public interface ErrorHandler {
+        void handle(Exception e);
+    }
 }

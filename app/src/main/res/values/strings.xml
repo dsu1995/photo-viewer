@@ -7,4 +7,6 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
     <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="load_image_title">Load Images</string>
+    <string name="fotag_mobile">Fotag Mobile</string>
 </resources>

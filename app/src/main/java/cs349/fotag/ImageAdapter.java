@@ -73,18 +73,17 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
             public void onClick(View v) {
                 Intent intent = new Intent(activity, FullscreenImageActivity.class);
                 ImageCollectionModel.MAILBOX = imageModel;
-//                intent.putExtra(MainActivity.IMAGE_MESSAGE, imageModel.getImageBmp());
                 activity.startActivity(intent);
             }
         });
 
-        holder.ratingBar.setRating(imageModel.getRating());
         holder.ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                imageModel.setRating((int) rating);
+            imageModel.setRating((int) rating);
             }
         });
+        holder.ratingBar.setRating(imageModel.getRating());
     }
 
     @Override

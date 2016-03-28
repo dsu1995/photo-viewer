@@ -37,6 +37,9 @@ public class ImageModel extends SimpleObservable {
 
         try (InputStream stream = url.openStream()) {
             Bitmap bmp = BitmapFactory.decodeStream(stream);
+            if (bmp == null) {
+                throw new IOException("Image cannot be decoded");
+            }
             image = new BitmapDrawable(res, bmp);
 
             Bitmap thumbnailBmp = ThumbnailUtils.extractThumbnail(bmp, 1280, 720);

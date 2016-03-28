@@ -38,7 +38,8 @@
                 android:id="@+id/ratingBar"
                 android:layout_gravity="center_horizontal"
                 android:numStars="@integer/num_stars"
-                android:stepSize="1"/>
+                android:stepSize="1"
+                android:clickable="true"/>
 
         </LinearLayout>
 

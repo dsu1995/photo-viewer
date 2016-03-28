@@ -18,7 +18,78 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay"/>
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                >
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/load_images_button"
+                    android:src="@android:drawable/ic_input_add"
+                    android:background="#00ffffff"
+                    android:clickable="true"
+                    android:onClick="loadImages"
+                    android:layout_marginStart="22dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@+id/title_text_view"/>
+
+                <RatingBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:id="@+id/rating_filter"
+                    android:numStars="@integer/num_stars"
+                    android:stepSize="1"
+                    android:layout_alignParentEnd="true"
+                    android:scaleX="0.75"
+                    android:scaleY="0.75"
+                    android:transformPivotX="0dp"
+                    android:layout_marginEnd="-60dp"
+                    android:paddingTop="10dp"
+                    android:layout_alignParentBottom="true"/>
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/clear_image_button"
+                    android:clickable="true"
+                    android:src="@android:drawable/ic_delete"
+                    android:background="#00ffffff"
+                    android:onClick="clearImages"
+                    android:layout_marginStart="17dp"
+                    android:layout_alignTop="@+id/load_images_button"
+                    android:layout_toEndOf="@+id/load_images_button"/>
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/load_url_button"
+                    android:clickable="true"
+                    android:src="@android:drawable/ic_menu_search"
+                    android:background="#00ffffff"
+                    android:onClick="loadUrl"
+                    android:layout_alignTop="@+id/clear_image_button"
+                    android:layout_toEndOf="@+id/clear_image_button"
+                    android:layout_marginStart="18dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="@string/fotag_mobile"
+                    android:id="@+id/title_text_view"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentStart="true"
+                    android:visibility="gone"/>
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
 
