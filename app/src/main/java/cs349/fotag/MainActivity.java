@@ -115,14 +115,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void loadImages(View view) {
-        imageCollectionModel.addImageResource(R.drawable.sample1);
-        imageCollectionModel.addImageResource(R.drawable.sample2);
-        imageCollectionModel.addImageResource(R.drawable.sample3);
-        imageCollectionModel.addImageResource(R.drawable.sample4);
-        try {
-            imageCollectionModel.addImageFromUrl("http://www.serebii.net/sunmoon2.jpg");
-        } catch (MalformedURLException e) {
-            errorHandler(e);
+        int[] sampleImages = {
+                R.drawable.sample1, R.drawable.sample2, R.drawable.sample3, R.drawable.sample4,
+                R.drawable.sample5, R.drawable.sample6, R.drawable.sample7, R.drawable.sample8,
+                R.drawable.sample9, R.drawable.sample10
+        };
+
+        for(int image: sampleImages) {
+            imageCollectionModel.addImageResource(image);
         }
     }
 

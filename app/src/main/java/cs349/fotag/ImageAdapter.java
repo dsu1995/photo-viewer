@@ -87,6 +87,13 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
     }
 
     @Override
+    public void onViewRecycled(ViewHolder holder) {
+        super.onViewRecycled(holder);
+        holder.imageView.setOnClickListener(null);
+        holder.ratingBar.setOnRatingBarChangeListener(null);
+    }
+
+    @Override
     public int getItemCount() {
         return images.getNumVisibleImages();
     }

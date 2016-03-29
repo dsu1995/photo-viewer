@@ -26,10 +26,10 @@ public class ImageModel extends SimpleObservable {
         options.inScaled = false;
 
         Bitmap bmp = BitmapFactory.decodeResource(res, id, options);
-        image = new BitmapDrawable(res, bmp);
+        image = new BitmapDrawable(bmp);
 
-        Bitmap thumbnailBmp = ThumbnailUtils.extractThumbnail(bmp, 1280, 720);
-        thumbnail = new BitmapDrawable(res, thumbnailBmp);
+        Bitmap thumbnailBmp = ThumbnailUtils.extractThumbnail(bmp, 853, 480);
+        thumbnail = new BitmapDrawable(thumbnailBmp);
     }
 
     public ImageModel(Resources res, URL url) throws IOException {
@@ -40,10 +40,10 @@ public class ImageModel extends SimpleObservable {
             if (bmp == null) {
                 throw new IOException("Image cannot be decoded");
             }
-            image = new BitmapDrawable(res, bmp);
+            image = new BitmapDrawable(bmp);
 
-            Bitmap thumbnailBmp = ThumbnailUtils.extractThumbnail(bmp, 1280, 720);
-            thumbnail = new BitmapDrawable(res, thumbnailBmp);
+            Bitmap thumbnailBmp = ThumbnailUtils.extractThumbnail(bmp, 853, 480);
+            thumbnail = new BitmapDrawable(thumbnailBmp);
         }
     }
 

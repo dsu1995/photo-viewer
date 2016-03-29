@@ -17,6 +17,10 @@ public class FullscreenImageActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_fullscreen_image);
 
+//        View decorView = getWindow().getDecorView();
+//        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+//        decorView.setSystemUiVisibility(uiOptions);
+
         ImageView imageView = (ImageView) findViewById(R.id.fullscreen_content);
 
         imageView.setImageDrawable(ImageCollectionModel.MAILBOX.getImage());
